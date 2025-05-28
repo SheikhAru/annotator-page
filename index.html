@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -87,6 +87,99 @@
         console.error('Submission error:', err);
         alert('Submission failed—please try again.');
       }
+    });
+  </script>
+</body>
+</html>
+ -->
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prolific Annotation Task</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    #context { margin-bottom: 1em; padding: 1em; border: 1px solid #ccc; background: #f9f9f9; }
+    .label-option { margin: 0.5em 0; }
+    button { margin-top: 1em; padding: 0.5em 1em; }
+    iframe { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Annotation Task</h1>
+  <div id="context">Loading…</div>
+
+  <!-- 1) the form POSTS directly to your Apps Script webhook -->
+  <form id="annotate" 
+        action="https://script.google.com/macros/s/AKfycbzvmZvrmn4Y5EaCxo70XaNTWuoe2MKJq486WmVDlANQgF8ZVXkzxYf0w3nW6Rb-fwWt9g/exec"
+        method="POST"
+        target="hidden_iframe">
+    
+    <!-- hidden inputs for all the data you need to record -->
+    <input type="hidden" name="context"    id="context_input"    value="">
+    <input type="hidden" name="prolific_pid"  id="pid_input"        value="">
+    <input type="hidden" name="study_id"      id="sid_input"        value="">
+    <input type="hidden" name="session_id"    id="session_input"    value="">
+    <input type="hidden" name="label"         id="label_input"      value="">
+
+    <!-- your six radio options -->
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 1" required> Label 1</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 2"> Label 2</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 3"> Label 3</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 4"> Label 4</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 5"> Label 5</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Label 6"> Label 6</label>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- 2) hidden iframe to swallow the form response -->
+  <iframe name="hidden_iframe"></iframe>
+
+  <script>
+    // 3) grab all the params from the URL
+    const p = new URLSearchParams(location.search);
+    const ctxt = p.get('context')    || 'No context provided';
+    const pid  = p.get('PROLIFIC_PID')  || '';
+    const sid  = p.get('STUDY_ID')      || '';
+    const sess = p.get('SESSION_ID')    || '';
+
+    // 4) fill in the visible context and hidden inputs
+    document.getElementById('context').innerText = ctxt;
+    document.getElementById('context_input').value = ctxt;
+    document.getElementById('pid_input').value     = pid;
+    document.getElementById('sid_input').value     = sid;
+    document.getElementById('session_input').value = sess;
+
+    // 5) when the form submits, copy the selected radio into the hidden "label" input,
+    //    let the browser POST it via the iframe, then redirect the parent window
+    document.getElementById('annotate').addEventListener('submit', (e) => {
+      const chosen = document.querySelector('input[name="label_radio"]:checked').value;
+      document.getElementById('label_input').value = chosen;
+
+      // After a tiny delay (to ensure the form actually went out), redirect:
+      setTimeout(() => {
+        const completionCode = 'C1N3YPXM';  // your Prolific completion code
+        window.location.href = 
+          `https://app.prolific.co/submissions/complete?cc=${completionCode}`;
+      }, 200);
     });
   </script>
 </body>
