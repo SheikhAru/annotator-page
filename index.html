@@ -92,7 +92,7 @@
     //    then append the question prompt after the context
     const contextDiv = document.getElementById('context');
     const questionText = "\n\nQuestion: What Dialogue Act Label best describes the given context?";
-    contextDiv.innerText = ctxt + questionText;
+    contextDiv.innerText = "Context: " + ctxt + questionText;
 
     document.getElementById('context_input').value = ctxt;
     document.getElementById('pid_input').value     = pid;
