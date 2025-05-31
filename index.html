@@ -1,103 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prolific Annotation Task</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    #context { 
-      margin-bottom: 1em; 
-      padding: 1em; 
-      border: 1px solid #ccc; 
-      background: #f9f9f9; 
-    }
-    .label-option { margin: 0.5em 0; }
-    button { margin-top: 1em; padding: 0.5em 1em; }
-  </style>
-</head>
-<body>
-  <h1>Annotation Task</h1>
-  <div id="context">Loading…</div>
-  <form id="annotate">
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 1" required> Label 1</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 2"> Label 2</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 3"> Label 3</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 4"> Label 4</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 5"> Label 5</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label" value="Label 6"> Label 6</label>
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-
-  <script>
-    // 1) Parse URL parameters
-    const params      = new URLSearchParams(window.location.search);
-    const contextText = params.get('context')     || 'No context provided.';
-    const prolificPID = params.get('PROLIFIC_PID')|| '';
-    const studyID     = params.get('STUDY_ID')    || '';
-    const sessionID   = params.get('SESSION_ID')  || '';
-
-    // 2) Configure your endpoints / codes
-    const webhookURL     = 'https://script.google.com/macros/s/AKfycbyWttnLxKtwIEEuhNXhQIOghi0dbZL_whuUlOp79DQnQ3gbflJmyLgFPZz7wSu3NXknCw/exec';    // ← REPLACE this
-    const completionCode = 'C1N3YPXM';                          // ← REPLACE this
-
-    // 3) Display the context
-    document.getElementById('context').innerText = contextText;
-
-    // 4) Handle form submission
-    document.getElementById('annotate').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const label = document.querySelector('input[name="label"]:checked').value;
-
-      const payload = {
-        context:      contextText,
-        label,
-        prolific_pid: prolificPID,
-        study_id:     studyID,
-        session_id:   sessionID,
-        timestamp:    new Date().toISOString()
-      };
-
-      try {
-        const res = await fetch(webhookURL, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload)
-        });
-        if (!res.ok) {
-          const errText = await res.text();
-          throw new Error(errText);
-        }
-        // 5) On success, redirect to Prolific to mark the task complete
-        window.location.href = 
-          `https://app.prolific.co/submissions/complete?cc=${completionCode}`;
-      } catch (err) {
-        console.error('Submission error:', err);
-        alert('Submission failed—please try again.');
-      }
-    });
-  </script>
-</body>
-</html>
- -->
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,28 +5,54 @@
   <title>Prolific Annotation Task</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2em; }
-    #context { margin-bottom: 1em; padding: 1em; border: 1px solid #ccc; background: #f9f9f9; }
+    #labels-list {
+      margin-bottom: 1.5em;
+      padding: 1em;
+      border: 1px solid #ccc;
+      background: #f1f1f1;
+    }
+    #context {
+      margin-bottom: 1em;
+      padding: 1em;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      white-space: pre-wrap;
+    }
     .label-option { margin: 0.5em 0; }
     button { margin-top: 1em; padding: 0.5em 1em; }
     iframe { display: none; }
   </style>
 </head>
 <body>
+  <!-- Dialog Act Labels list -->
+  <div id="labels-list">
+    <strong>Dialog Act Labels:</strong>
+    <ol>
+      <li><strong>Informing</strong> – Providing any information or facts to the listener.</li>
+      <li><strong>Exploring</strong> – Seeking to understand or clarify ideas, feelings, or situations.</li>
+      <li><strong>Questioning</strong> – Asking for information, clarification, or confirmation.</li>
+      <li><strong>Acknowledging</strong> – Indicating receipt or understanding of what was said.</li>
+      <li><strong>Directive</strong> – Giving instructions, requests, or commands to the listener.</li>
+      <li><strong>Sympathizing</strong> – Expressing understanding, care, empathy, or compassion for someone’s feelings or situation.</li>
+      <li><strong>Commissive</strong> – Serving to state intention, make a promise, or take an oath.</li>
+    </ol>
+  </div>
+
   <h1>Annotation Task</h1>
   <div id="context">Loading…</div>
 
   <!-- 1) the form POSTS directly to your Apps Script webhook -->
-  <form id="annotate" 
+  <form id="annotate"
         action="https://script.google.com/macros/s/AKfycbweQ9PPVgWP8QCyrYpLY5DKP_S7JeW0cBswQxAdGA9gK3OT22RUGON6-DqLVudWpKAChw/exec"
         method="POST"
         target="hidden_iframe">
-    
+
     <!-- hidden inputs for all the data you need to record -->
-    <input type="hidden" name="context"    id="context_input"    value="">
-    <input type="hidden" name="prolific_pid"  id="pid_input"        value="">
-    <input type="hidden" name="study_id"      id="sid_input"        value="">
-    <input type="hidden" name="session_id"    id="session_input"    value="">
-    <input type="hidden" name="label"         id="label_input"      value="">
+    <input type="hidden" name="context"      id="context_input"    value="">
+    <input type="hidden" name="prolific_pid" id="pid_input"        value="">
+    <input type="hidden" name="study_id"     id="sid_input"        value="">
+    <input type="hidden" name="session_id"   id="session_input"    value="">
+    <input type="hidden" name="label"        id="label_input"      value="">
 
     <!-- your six radio options -->
     <div class="label-option">
@@ -147,6 +73,7 @@
     <div class="label-option">
       <label><input type="radio" name="label_radio" value="Label 6"> Label 6</label>
     </div>
+
     <button type="submit">Submit</button>
   </form>
 
@@ -161,8 +88,12 @@
     const sid  = p.get('STUDY_ID')      || '';
     const sess = p.get('SESSION_ID')    || '';
 
-    // 4) fill in the visible context and hidden inputs
-    document.getElementById('context').innerText = ctxt;
+    // 4) fill in the visible context and hidden inputs,
+    //    then append the question prompt after the context
+    const contextDiv = document.getElementById('context');
+    const questionText = "\n\nQuestion: What Dialogue Act Label best describes the given context?";
+    contextDiv.innerText = ctxt + questionText;
+
     document.getElementById('context_input').value = ctxt;
     document.getElementById('pid_input').value     = pid;
     document.getElementById('sid_input').value     = sid;
@@ -177,7 +108,7 @@
       // After a tiny delay (to ensure the form actually went out), redirect:
       setTimeout(() => {
         const completionCode = 'C1N3YPXM';  // your Prolific completion code
-        window.location.href = 
+        window.location.href =
           `https://app.prolific.co/submissions/complete?cc=${completionCode}`;
       }, 200);
     });
