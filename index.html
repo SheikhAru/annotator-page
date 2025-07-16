@@ -3,113 +3,175 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MTurk Annotation Task (Sandbox)</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    #labels-list {
+    /* Reset & base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Centered card container */
+    .container {
+      max-width: 700px;
+      margin: 2em auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Collapsible instructions */
+    details {
+      margin-bottom: 1.5em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    details summary {
+      padding: 0.75em 1em;
+      font-weight: 500;
+      cursor: pointer;
+      list-style: none;
+    }
+    details[open] summary {
+      background: #e0e0e0;
+    }
+    details ol {
+      padding: 0 1.5em 1em;
+      margin: 0;
+    }
+    details ul, details p {
+      padding: 0 1.5em 1em;
+    }
+
+    /* Context box */
+    #context {
       margin-bottom: 1.5em;
       padding: 1em;
-      border: 1px solid #ccc;
-      background: #f1f1f1;
-    }
-    #context {
-      margin-bottom: 1em;
-      padding: 1em;
-      border: 1px solid #ccc;
-      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fcfcfc;
+      font-style: italic;
       white-space: pre-wrap;
     }
-    .label-option { margin: 0.5em 0; }
-    button { margin-top: 1em; padding: 0.5em 1em; }
-    iframe { display: none; }
+
+    /* Form styling */
+    .label-option {
+      margin: 0.75em 0;
+    }
+    .label-option input {
+      margin-right: 0.5em;
+    }
+    button {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      padding: 0.75em 1.5em;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1565c0;
+    }
   </style>
 </head>
+
 <body>
-  <!-- Dialog Act Labels list -->
-  <div id="labels-list">
-    <strong>Dialog Act Labels:</strong>
-    <ol>
-      <li><strong>Informing</strong> – Providing any information or facts to the listener.</li>
-      <li><strong>Exploring</strong> – Seeking to understand or clarify ideas, feelings, or situations.</li>
-      <li><strong>Questioning</strong> – Asking for information, clarification, or confirmation.</li>
-      <li><strong>Acknowledging</strong> – Indicating receipt or understanding of what was said.</li>
-      <li><strong>Directive</strong> – Giving instructions, requests, or commands to the listener.</li>
-      <li><strong>Sympathizing</strong> – Expressing understanding, care, empathy, or compassion for someone’s feelings or situation.</li>
-      <li><strong>Commissive</strong> – Serving to state intention, make a promise, or take an oath.</li>
-    </ol>
+  <div class="container">
+    <details>
+      <summary>Instructions</summary>
+      <p><strong>Dialog Act Labels:</strong></p>
+      <ol>
+        <li><strong>Informing</strong> – Providing any information or facts to the listener.</li>
+        <li><strong>Exploring</strong> – Seeking to understand or clarify ideas, feelings, or situations.</li>
+        <li><strong>Questioning</strong> – Asking for information, clarification, or confirmation.</li>
+        <li><strong>Acknowledging</strong> – Indicating receipt or understanding of what was said.</li>
+        <li><strong>Directive</strong> – Giving instructions, requests, or commands to the listener.</li>
+        <li><strong>Sympathizing</strong> – Expressing understanding, care, empathy, or compassion.</li>
+        <li><strong>Commissive</strong> – Serving to state intention, make a promise, or take an oath.</li>
+      </ol>
+    </details>
+
+    <h2>Annotation Task</h2>
+    <div id="context">Loading…</div>
+
+    <form id="annotate"
+          action="https://workersandbox.mturk.com/mturk/externalSubmit"
+          method="POST"
+          target="hidden_iframe">
+
+      <!-- MTurk-required fields -->
+      <input type="hidden" name="assignmentId" id="assignmentId_input" value="">
+      <input type="hidden" name="hitId"        id="hitId_input"        value="">
+      <input type="hidden" name="workerId"     id="workerId_input"     value="">
+      <input type="hidden" name="turkSubmitTo" id="turkSubmitTo_input" value="">
+
+      <!-- Your data fields -->
+      <input type="hidden" name="context" id="context_input" value="">
+      <input type="hidden" name="label"   id="label_input"   value="">
+
+      <!-- Radio options -->
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Informing" required> Informing</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Exploring"> Exploring</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Questioning"> Questioning</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Acknowledging"> Acknowledging</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Directive"> Directive</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Sympathizing"> Sympathizing</label>
+      </div>
+      <div class="label-option">
+        <label><input type="radio" name="label_radio" value="Commissive"> Commissive</label>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
   </div>
 
-  <h1>Annotation Task</h1>
-  <div id="context">Loading…</div>
-
-  <!-- MTurk Sandbox submits here -->
-  <form id="annotate"
-        action="https://workersandbox.mturk.com/mturk/externalSubmit"
-        method="POST"
-        target="hidden_iframe">
-
-    <!-- MTurk-required hidden fields -->
-    <input type="hidden" name="assignmentId" id="assignmentId_input" value="">
-    <input type="hidden" name="hitId"        id="hitId_input"        value="">
-    <input type="hidden" name="workerId"     id="workerId_input"     value="">
-    <input type="hidden" name="turkSubmitTo" id="turkSubmitTo_input" value="">
-
-    <!-- Your data fields -->
-    <input type="hidden" name="context"   id="context_input" value="">
-    <input type="hidden" name="label"     id="label_input"   value="">
-
-    <!-- Radio options -->
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Informing" required> Informing</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Exploring"> Exploring</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Questioning"> Questioning</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Acknowledging"> Acknowledging</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Directive"> Directive</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Sympathizing"> Sympathizing</label>
-    </div>
-    <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Commissive"> Commissive</label>
-    </div>
-
-    <button type="submit">Submit</button>
-  </form>
-
-  <!-- swallow the response -->
-  <iframe name="hidden_iframe"></iframe>
-
   <script>
-    // parse MTurk + context params
-    const p    = new URLSearchParams(location.search);
-    const ctxt = p.get('context')        || 'No context provided';
-    const aid  = p.get('assignmentId')   || '';
-    const hid  = p.get('hitId')          || '';
-    const wid  = p.get('workerId')       || '';
-    const tgt  = p.get('turkSubmitTo')   || '';
+    // 1) Grab MTurk + context params
+    const p    = new URLSearchParams(window.location.search);
+    const ctxt = p.get('context')      || 'No context provided';
+    const aid  = p.get('assignmentId') || '';
+    const hid  = p.get('hitId')        || '';
+    const wid  = p.get('workerId')     || '';
+    const tgt  = p.get('turkSubmitTo') || '';
 
-    // fill in context display + hidden inputs
+    // 2) Populate the UI + hidden fields
     document.getElementById('context').innerText =
       "Context: " + ctxt +
       "\n\nQuestion: What Dialogue Act Label best describes the given context?";
-    document.getElementById('context_input').value     = ctxt;
+    document.getElementById('context_input').value      = ctxt;
     document.getElementById('assignmentId_input').value = aid;
     document.getElementById('hitId_input').value        = hid;
     document.getElementById('workerId_input').value     = wid;
     document.getElementById('turkSubmitTo_input').value = tgt;
 
-    // on submit, copy chosen radio into label_input
+    // 3) On submit, copy the selected radio into the hidden "label" field
     document.getElementById('annotate').addEventListener('submit', () => {
       const chosen = document.querySelector('input[name="label_radio"]:checked').value;
       document.getElementById('label_input').value = chosen;
-      // allow the form to POST to MTurk; no further JS needed
+      // let the browser handle the POST to MTurk and show the confirmation
     });
   </script>
 </body>
