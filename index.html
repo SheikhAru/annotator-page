@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prolific Annotation Task</title>
+  <title>MTurk Annotation Task (Sandbox)</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2em; }
     #labels-list {
@@ -41,76 +41,75 @@
   <h1>Annotation Task</h1>
   <div id="context">Loading…</div>
 
-  <!-- 1) the form POSTS directly to your Apps Script webhook -->
+  <!-- MTurk Sandbox submits here -->
   <form id="annotate"
-        action="https://script.google.com/macros/s/AKfycbweQ9PPVgWP8QCyrYpLY5DKP_S7JeW0cBswQxAdGA9gK3OT22RUGON6-DqLVudWpKAChw/exec"
+        action="https://workersandbox.mturk.com/mturk/externalSubmit"
         method="POST"
         target="hidden_iframe">
 
-    <!-- hidden inputs for all the data you need to record -->
-    <input type="hidden" name="context"      id="context_input"    value="">
-    <input type="hidden" name="prolific_pid" id="pid_input"        value="">
-    <input type="hidden" name="study_id"     id="sid_input"        value="">
-    <input type="hidden" name="session_id"   id="session_input"    value="">
-    <input type="hidden" name="label"        id="label_input"      value="">
+    <!-- MTurk-required hidden fields -->
+    <input type="hidden" name="assignmentId" id="assignmentId_input" value="">
+    <input type="hidden" name="hitId"        id="hitId_input"        value="">
+    <input type="hidden" name="workerId"     id="workerId_input"     value="">
+    <input type="hidden" name="turkSubmitTo" id="turkSubmitTo_input" value="">
 
-    <!-- your six radio options -->
+    <!-- Your data fields -->
+    <input type="hidden" name="context"   id="context_input" value="">
+    <input type="hidden" name="label"     id="label_input"   value="">
+
+    <!-- Radio options -->
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 1" required> Label 1</label>
+      <label><input type="radio" name="label_radio" value="Informing" required> Informing</label>
     </div>
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 2"> Label 2</label>
+      <label><input type="radio" name="label_radio" value="Exploring"> Exploring</label>
     </div>
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 3"> Label 3</label>
+      <label><input type="radio" name="label_radio" value="Questioning"> Questioning</label>
     </div>
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 4"> Label 4</label>
+      <label><input type="radio" name="label_radio" value="Acknowledging"> Acknowledging</label>
     </div>
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 5"> Label 5</label>
+      <label><input type="radio" name="label_radio" value="Directive"> Directive</label>
     </div>
     <div class="label-option">
-      <label><input type="radio" name="label_radio" value="Label 6"> Label 6</label>
+      <label><input type="radio" name="label_radio" value="Sympathizing"> Sympathizing</label>
+    </div>
+    <div class="label-option">
+      <label><input type="radio" name="label_radio" value="Commissive"> Commissive</label>
     </div>
 
     <button type="submit">Submit</button>
   </form>
 
-  <!-- 2) hidden iframe to swallow the form response -->
+  <!-- swallow the response -->
   <iframe name="hidden_iframe"></iframe>
 
   <script>
-    // 3) grab all the params from the URL
-    const p = new URLSearchParams(location.search);
-    const ctxt = p.get('context')    || 'No context provided';
-    const pid  = p.get('PROLIFIC_PID')  || '';
-    const sid  = p.get('STUDY_ID')      || '';
-    const sess = p.get('SESSION_ID')    || '';
+    // parse MTurk + context params
+    const p    = new URLSearchParams(location.search);
+    const ctxt = p.get('context')        || 'No context provided';
+    const aid  = p.get('assignmentId')   || '';
+    const hid  = p.get('hitId')          || '';
+    const wid  = p.get('workerId')       || '';
+    const tgt  = p.get('turkSubmitTo')   || '';
 
-    // 4) fill in the visible context and hidden inputs,
-    //    then append the question prompt after the context
-    const contextDiv = document.getElementById('context');
-    const questionText = "\n\nQuestion: What Dialogue Act Label best describes the given context?";
-    contextDiv.innerText = "Context: " + ctxt + questionText;
+    // fill in context display + hidden inputs
+    document.getElementById('context').innerText =
+      "Context: " + ctxt +
+      "\n\nQuestion: What Dialogue Act Label best describes the given context?";
+    document.getElementById('context_input').value     = ctxt;
+    document.getElementById('assignmentId_input').value = aid;
+    document.getElementById('hitId_input').value        = hid;
+    document.getElementById('workerId_input').value     = wid;
+    document.getElementById('turkSubmitTo_input').value = tgt;
 
-    document.getElementById('context_input').value = ctxt;
-    document.getElementById('pid_input').value     = pid;
-    document.getElementById('sid_input').value     = sid;
-    document.getElementById('session_input').value = sess;
-
-    // 5) when the form submits, copy the selected radio into the hidden "label" input,
-    //    let the browser POST it via the iframe, then redirect the parent window
-    document.getElementById('annotate').addEventListener('submit', (e) => {
+    // on submit, copy chosen radio into label_input
+    document.getElementById('annotate').addEventListener('submit', () => {
       const chosen = document.querySelector('input[name="label_radio"]:checked').value;
       document.getElementById('label_input').value = chosen;
-
-      // After a tiny delay (to ensure the form actually went out), redirect:
-      setTimeout(() => {
-        const completionCode = 'C1N3YPXM';  // your Prolific completion code
-        window.location.href =
-          `https://app.prolific.co/submissions/complete?cc=${completionCode}`;
-      }, 200);
+      // allow the form to POST to MTurk; no further JS needed
     });
   </script>
 </body>
