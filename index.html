@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* Reset & base */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto', sans-serif;
@@ -17,7 +16,6 @@
       line-height: 1.5;
     }
 
-    /* Centered card container */
     .container {
       max-width: 700px;
       margin: 2em auto;
@@ -27,7 +25,6 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     }
 
-    /* Collapsible instructions */
     details {
       margin-bottom: 1.5em;
       border: 1px solid #ccc;
@@ -51,7 +48,6 @@
       padding: 0 1.5em 1em;
     }
 
-    /* Context box */
     #context {
       margin-bottom: 1.5em;
       padding: 1em;
@@ -62,7 +58,6 @@
       white-space: pre-wrap;
     }
 
-    /* Form styling */
     .label-option {
       margin: 0.75em 0;
     }
@@ -99,6 +94,18 @@
         <li><strong>Sympathizing</strong> – Expressing understanding, care, empathy, or compassion.</li>
         <li><strong>Commissive</strong> – Serving to state intention, make a promise, or take an oath.</li>
       </ol>
+
+      <p><strong>Example</strong></p>
+      <p><strong>Utterance 1:</strong> "Leo, I really think you’re beating around the bush with this guy."</p>
+      <p><strong>Question:</strong> What Dialogue Act Label best describes the utterance/text?</p>
+      <ul>
+        <li><mark style="background-color: lime">Informing</mark> ✅</li>
+        <li>Exploring</li>
+        <li>Questioning</li>
+        <li>Acknowledging</li>
+        <li>Directive</li>
+        <li>Sympathizing</li>
+      </ul>
     </details>
 
     <h2>Annotation Task</h2>
@@ -148,7 +155,6 @@
   </div>
 
   <script>
-    // 1) Grab MTurk + context params
     const p    = new URLSearchParams(window.location.search);
     const ctxt = p.get('context')      || 'No context provided';
     const aid  = p.get('assignmentId') || '';
@@ -156,7 +162,6 @@
     const wid  = p.get('workerId')     || '';
     const tgt  = p.get('turkSubmitTo') || '';
 
-    // 2) Populate the UI + hidden fields
     document.getElementById('context').innerText =
       "Context: " + ctxt +
       "\n\nQuestion: What Dialogue Act Label best describes the given context?";
@@ -166,11 +171,9 @@
     document.getElementById('workerId_input').value     = wid;
     document.getElementById('turkSubmitTo_input').value = tgt;
 
-    // 3) On submit, copy the selected radio into the hidden "label" field
     document.getElementById('annotate').addEventListener('submit', () => {
       const chosen = document.querySelector('input[name="label_radio"]:checked').value;
       document.getElementById('label_input').value = chosen;
-      // let the browser handle the POST to MTurk and show the confirmation
     });
   </script>
 </body>
