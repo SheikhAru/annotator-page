@@ -96,8 +96,8 @@
       </ol>
 
       <p><strong>Example</strong></p>
-      <p><strong>Utterance 1:</strong> "Leo, I really think you’re beating around the bush with this guy."</p>
-      <p><strong>Question:</strong> What Dialogue Act Label best describes the utterance/text?</p>
+      <p><strong>Context:</strong> "Leo, I really think you’re beating around the bush with this guy."</p>
+      <p>What tag from below best describes the context?</p>
       <ul>
         <li><mark style="background-color: lime">Informing</mark> ✅</li>
         <li>Exploring</li>
@@ -164,7 +164,7 @@
 
     document.getElementById('context').innerText =
       "Context: " + ctxt +
-      "\n\nQuestion: What Dialogue Act Label best describes the given context?";
+      "\n\nWhat tag from below best describes the given context?";
     document.getElementById('context_input').value      = ctxt;
     document.getElementById('assignmentId_input').value = aid;
     document.getElementById('hitId_input').value        = hid;
