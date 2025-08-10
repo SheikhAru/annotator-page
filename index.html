@@ -40,36 +40,12 @@
     details[open] summary {
       background: #e0e0e0;
     }
-
-    /* Paragraphs and bullets inside the Instructions box */
-    details p,
-    details ul {
-      padding: 0 1.5em 1em;
-    }
-    details ul {
-      margin-left: 1.5em;       /* normal bullet indent */
-      list-style-position: outside;
-    }
-
-    /* FIX: clean, consistent hanging indent for the numbered list */
     details ol {
-      counter-reset: dlg;
-      list-style: none;          /* remove default so we can control layout */
-      margin: 0 1.5em 1em 1.5em; /* space inside the box */
-      padding: 0;
+      padding: 0 1.5em 1em;
+      margin: 0;
     }
-    details ol li {
-      counter-increment: dlg;
-      display: grid;
-      grid-template-columns: 2.2ch 1fr; /* room for 1–9 comfortably */
-      column-gap: 0.6ch;
-      align-items: start;
-      margin: 0.25em 0;
-    }
-    details ol li::before {
-      content: counter(dlg) ".";
-      font-weight: 500;
-      text-align: right;         /* aligns the number neatly */
+    details ul, details p {
+      padding: 0 1.5em 1em;
     }
 
     #context {
